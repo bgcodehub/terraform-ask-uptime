@@ -121,3 +121,99 @@ resource "kubernetes_service" "uptime_kuma_service" {
     }
   }
 }
+
+# Authentik Deployment
+resource "kubernetes_deployment" "authentik" {
+  metadata {
+    name = "authentik"
+  }
+  spec {
+    replicas = 1
+    selector {
+      match_labels = {
+        app = "authentik"
+      }
+    }
+    template {
+      metadata {
+        labels = {
+          app = "authentik"
+        }
+      }
+      spec {
+        container {
+          image = "goauthentik.io/authentik"
+          name  = "authentik"
+          # Specify ports, environment variables, volume mounts etc.
+        }
+        # Define volumes if necessary
+      }
+    }
+  }
+}
+
+# Authentik Service
+resource "kubernetes_service" "authentik_service" {
+  metadata {
+    name = "authentik-service"
+  }
+  spec {
+    selector = {
+      app = "authentik"
+    }
+    type = "ClusterIP"
+    port {
+      port        = 80 # Adjust as needed
+      target_port = 80 # Adjust as needed
+    }
+  }
+}
+
+# Traefik Deployment
+resource "kubernetes_deployment" "traefik" {
+  metadata {
+    name = "traefik"
+  }
+  spec {
+    replicas = 1
+    selector {
+      match_labels = {
+        app = "traefik"
+      }
+    }
+    template {
+      metadata {
+        labels = {
+          app = "traefik"
+        }
+      }
+      spec {
+        container {
+          image = "traefik:v2.4"
+          name  = "traefik"
+          # Specify ports, arguments etc.
+        }
+        # Define Traefik specific configurations
+      }
+    }
+  }
+}
+
+# Traefik Service
+resource "kubernetes_service" "traefik_service" {
+  metadata {
+    name = "traefik-service"
+  }
+  spec {
+    selector = {
+      app = "traefik"
+    }
+    type = "LoadBalancer"
+    port {
+      port        = 80 # HTTP
+    }
+    port {
+      port        = 443 # HTTPS
+    }
+  }
+}
