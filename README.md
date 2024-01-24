@@ -35,7 +35,7 @@ This repository contains the necessary Terraform configurations to deploy Uptime
    cluster_name        = "myAKSCluster"
    dns_prefix          = "myaksclusterdns"
    node_count          = 1
-   vm_size             = "Standard_DS2_v2"
+   vm_size             = "Standard_D4as_v5"
    client_id           = "your-service-principal-client-id"
    client_secret       = "your-service-principal-client-secret"
    ```
