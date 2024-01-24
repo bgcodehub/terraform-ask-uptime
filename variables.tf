@@ -25,7 +25,7 @@ variable "node_count" {
 
 variable "vm_size" {
   description = "Size of the VMs in the node pool"
-  default     = "Standard_DS2_v2"
+  default     = "Standard_D4as_v5"
 }
 
 variable "client_id" {
