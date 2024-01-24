@@ -169,51 +169,56 @@ resource "kubernetes_service" "authentik_service" {
   }
 }
 
-# Traefik Deployment
-resource "kubernetes_deployment" "traefik" {
+# Nginx Deployment
+resource "kubernetes_deployment" "nginx" {
   metadata {
-    name = "traefik"
+    name = "nginx"
   }
   spec {
     replicas = 1
     selector {
       match_labels = {
-        app = "traefik"
+        app = "nginx"
       }
     }
     template {
       metadata {
         labels = {
-          app = "traefik"
+          app = "nginx"
         }
       }
       spec {
         container {
-          image = "traefik:v2.4"
-          name  = "traefik"
-          # Specify ports, arguments etc.
+          image = "nginx:latest"
+          name  = "nginx"
+          port {
+            container_port = 80
+          }
+          // Additional configuration such as volume mounts for custom config
         }
-        # Define Traefik specific configurations
+        // Additional configuration such as volumes for custom config
       }
     }
   }
 }
 
-# Traefik Service
-resource "kubernetes_service" "traefik_service" {
+# Nginx Service
+resource "kubernetes_service" "nginx_service" {
   metadata {
-    name = "traefik-service"
+    name = "nginx-service"
   }
   spec {
     selector = {
-      app = "traefik"
+      app = "nginx"
     }
     type = "LoadBalancer"
     port {
       port        = 80 # HTTP
+      target_port = 80
     }
     port {
       port        = 443 # HTTPS
+      target_port = 443
     }
   }
 }
