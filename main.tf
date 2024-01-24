@@ -27,12 +27,6 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
   }
 }
 
-# AKS Cluster Data
-data "azurerm_kubernetes_cluster" "current" {
-  name                = azurerm_kubernetes_cluster.aks_cluster.name
-  resource_group_name = azurerm_resource_group.aks_rg.name
-}
-
 # Kubernetes Provider Configuration
 provider "kubernetes" {
   host                   = data.azurerm_kubernetes_cluster.current.kube_config[0].host
